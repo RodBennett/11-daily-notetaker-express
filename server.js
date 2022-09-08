@@ -14,13 +14,12 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3001;
 
-
 // GET Route for homepage
 app.get('/', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/index.html'))
 );
 
-// GET route for notes.html linked to homepage
+// GET route for notes.html linked to homepage and response to client requests
 app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
@@ -38,7 +37,6 @@ app.get('/api/notes/:id', (req, res) => {
 
 // POST route for creating notes
 app.post('/api/notes', (req, res) => {
-
   // variable to add note using req.body, which is a property that uses body of objects in db.json
   const addNote = req.body;
   // this adds the id property to new notes, which calls the uuid function in the helper code to generate random id numbers for notes
@@ -58,27 +56,22 @@ app.post('/api/notes', (req, res) => {
    res.sendFile(path.join(__dirname, 'public/notes.html'));
 });
 
-// GET notes on HTML page at client's request
-app.get('/notes', (req, res) => res.sendFile(__dirname, '/public/notes/html'))
-app.get('*', (req, res) => res.sendFile(__dirname, '/public/index.html'))
-
-// DELETE notes
+// Bonus - DELETE notes
 app.delete("/api/notes/:id", (req, res) => {
-  // To delete a note, read all notes from the db.json file
+  // reads all notes from the db.json file
   let noteData = fs.readFileSync('./db/db.json');
   // string data from db.json parsed into js object
   let noteTaker = JSON.parse(noteData);
-  // 
-  const notesSaved = noteTaker.filter(deleteItem => deleteItem.id === req.params.id);
-  console.log(notesSaved, "pressed delete")
+  // filters out the selected id to be deleted according to user choice
+  const savedNote = noteTaker.filter(note => note.id === req.params.id);
   
-  // select and delete selected note by removing the note with the given id property
-  const notesIndex = noteTaker.indexOf(notesSaved);
-  console.log(notesIndex, "minus 1")
+  // create index of selected note to be deleted for splice function
+  const notesIndex = noteTaker.indexOf(savedNote);
+  console.log(savedNote)
+  // splice function removes an element from noteTaker array
   noteTaker.splice(notesIndex);
-  console.log(noteTaker, "remaining")
-  
- // rewrite the notes to the db.json file
+  console.log(notesIndex)
+ // rewrite db.json file with ommitted note
  fs.writeFile(__dirname + "/db/db.json", JSON.stringify(noteTaker, null, 2), err => {
    if (err) throw err;
    //send response back to client
