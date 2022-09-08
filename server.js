@@ -19,7 +19,7 @@ app.get('/', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/index.html'))
 );
 
-// GET route for notes.html linked to homepage and response to client requests
+// GET route for api notes to notes.html 
 app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
@@ -53,7 +53,7 @@ app.post('/api/notes', (req, res) => {
     res.json(noteReceiver)
    });
    // response function to send data from db.json to html page
-   res.sendFile(path.join(__dirname, 'public/notes.html'));
+   res.sendFile(path.join(__dirname, '/public/notes.html'));
 });
 
 // Bonus - DELETE notes
@@ -76,6 +76,11 @@ app.delete("/api/notes/:id", (req, res) => {
    res.json(noteTaker)    
  }); 
 });
+
+// GET route for notes.html page
+app.get("/notes", (req, res) => res.sendFile(__dirname + "/public/notes.html"));
+// GET * - returns the index.html file 
+app.get("*", (req, res) => res.sendFile(__dirname + "/public/index.html"));
 
 // set up port for listening and creates link for execution in terminal
 app.listen(PORT, () => console.log(`App listening on http://localhost:${PORT}`));
