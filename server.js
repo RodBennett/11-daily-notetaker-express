@@ -64,10 +64,8 @@ app.delete("/api/notes/:id", (req, res) => {
   let noteTaker = JSON.parse(noteData);
   // filters out the selected id to be deleted according to user choice
   const savedNote = noteTaker.filter(note => note.id === req.params.id);
-  
   // create index of selected note to be deleted for splice function
   const notesIndex = noteTaker.indexOf(savedNote);
-  console.log(savedNote)
   // splice function removes an element from noteTaker array
   noteTaker.splice(notesIndex);
   console.log(notesIndex)
