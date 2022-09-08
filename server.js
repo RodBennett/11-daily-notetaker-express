@@ -3,9 +3,6 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 
-// importing db.json whbile creating a global destructured notes variable
-const { notes } = require('./db/db.json')
-
 // importing helper code to generate random id numbers for notes
 const uuid = require('./helpers/uuid.js')
 
@@ -46,13 +43,13 @@ app.post('/api/notes', (req, res) => {
   const addNote = req.body;
   // this adds the id property to new notes, which calls the uuid function in the helper code to generate random id numbers for notes
   addNote.id = uuid();
-  // the readFileSync method is used for the data in the note to 
+  // readFileSync sends strings of db.json data to variable noteData
   let noteData = fs.readFileSync('./db/db.json')
-  // parses the data in the new note 
+  // data in db.json is parsed into an object 
   let noteReceiver = JSON.parse(noteData)
-  // pushes data from new note in its body form (key, value) to a variable
+  // data pushed from new note as an object to a variable
   noteReceiver.push(req.body);
-  // writes the data to db.json, data is stringified for JSON format, and "null, 2" is used to format it with indentations in db.json
+  // writes the data as a string for storage in db.json, "null, 2" is used to format it with indentations in db.json
   fs.writeFileSync('./db/db.json', JSON.stringify(noteReceiver, null, 2), err => {
     if (err) throw err;
     res.json(noteReceiver)
@@ -66,12 +63,27 @@ app.get('/notes', (req, res) => res.sendFile(__dirname, '/public/notes/html'))
 app.get('*', (req, res) => res.sendFile(__dirname, '/public/index.html'))
 
 // DELETE notes
-app.delete('/api/notes/:id', (req, res) => {
-  const { id } = req.params;
-  const delNote = notes.indexOf(note => note.id == id);
-
-  notes.splice(delNote, 1);
-  return res.send();
+app.delete("/api/notes/:id", (req, res) => {
+  // To delete a note, read all notes from the db.json file
+  let noteData = fs.readFileSync('./db/db.json');
+  // string data from db.json parsed into js object
+  let noteTaker = JSON.parse(noteData);
+  // 
+  const notesSaved = noteTaker.filter(deleteItem => deleteItem.id === req.params.id);
+  console.log(notesSaved, "pressed delete")
+  
+  // select and delete selected note by removing the note with the given id property
+  const notesIndex = noteTaker.indexOf(notesSaved);
+  console.log(notesIndex, "minus 1")
+  noteTaker.splice(notesIndex);
+  console.log(noteTaker, "remaining")
+  
+ // rewrite the notes to the db.json file
+ fs.writeFile(__dirname + "/db/db.json", JSON.stringify(noteTaker, null, 2), err => {
+   if (err) throw err;
+   //send response back to client
+   res.json(noteTaker)    
+ }); 
 });
 
 // set up port for listening and creates link for execution in terminal
