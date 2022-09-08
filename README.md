@@ -8,7 +8,7 @@ When the user starts the app, they come to a landing page that looks like this:
 
 <img width="1143" alt="Screen Shot 2022-09-08 at 5 01 51 PM" src="https://user-images.githubusercontent.com/106923428/189240721-f6828562-b92f-4204-8079-731375ff8309.png">
 
-After clicking "Getting Started" the come to a page that looks like this:
+After clicking "Getting Started" the client comes to a page that looks like this:
 
 <img width="1148" alt="Screen Shot 2022-09-08 at 5 03 47 PM" src="https://user-images.githubusercontent.com/106923428/189240815-966604e8-80c9-4ec0-9c54-c8a3db876073.png">
 
