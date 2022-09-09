@@ -62,18 +62,13 @@ app.delete("/api/notes/:id", (req, res) => {
   let noteData = fs.readFileSync('./db/db.json');
   // string data from db.json parsed into js object
   let noteTaker = JSON.parse(noteData);
-  // filters out the selected id to be deleted according to user choice
-  const savedNote = noteTaker.filter(note => note.id === req.params.id);
-  // create index of selected note to be deleted for splice function
-  const notesIndex = noteTaker.indexOf(savedNote);
-  // splice function removes an element from noteTaker array
-  noteTaker.splice(notesIndex);
-  console.log(notesIndex)
- // rewrite db.json file with ommitted note
- fs.writeFile(__dirname + "/db/db.json", JSON.stringify(noteTaker, null, 2), err => {
+  // filters out the selected id to be deleted according to user choice by preserving all ids that are not selected
+  const savedNote = noteTaker.filter((note) => note.id !== req.params.id);
+// rewrites file with all ids that were not selected for delete
+ fs.writeFile(__dirname + "/db/db.json", JSON.stringify(savedNote, null, 2), err => {
    if (err) throw err;
    //send response back to client
-   res.json(noteTaker)    
+   res.json(savedNote)    
  }); 
 });
 
