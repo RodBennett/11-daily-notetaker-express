@@ -1,6 +1,6 @@
 # 11 Express.js: Note Taker
 
-## [Heroku Deployment Link](https://agile-sands-98576.herokuapp.com/)
+## [Heroku Deployment Link](https://daily-notetaker.herokuapp.com/)
 
 
 ## Overview
